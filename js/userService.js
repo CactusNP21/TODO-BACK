@@ -4,13 +4,21 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose')
 const {ObjectId} = require("mongodb");
 const {token} = require("morgan");
-const {Task} = require("./Models/Task");
+const {Board} = require("./Models/Board");
 
-const createTask = async (req, res, next) => {
+const createBoard = async (req, res, next) => {
     const data = verify(req.headers.token)
-    const {title} = req.body
-    const task = new Task({
-        title: title,
+    const {name} = req.body
+    const {des} = req.body
+    const task = new Board({
+        name: name,
+        des: des,
+        date: new Date(),
+        tasks: {
+            todo: [],
+            progress: [],
+            done: []
+        },
         publisher: data.userId
     })
     task.save()
@@ -20,16 +28,29 @@ const createTask = async (req, res, next) => {
         });
 }
 
-const getTasks = async (req, res, next) => {
+const getBoards = async (req, res, next) => {
     const data = verify(req.headers.token)
-    const tasks = await Task.find({publisher: data.userId})
-    return res.json({tasks: tasks})
+    const tasks = await Board.find({publisher: data.userId})
+    if (tasks) {
+        return res.json({tasks: tasks})
+    }
+    return res.json({tasks: []})
 }
 
-const deleteTask = async (req, res, next) => {
+const deleteBoard = async (req, res, next) => {
     const data = verify(req.headers.token)
-    await Task.deleteOne({id: req.body.id})
-    return res.json({'delete': 'successful' })
+    await Board.deleteOne({_id: req.body.id})
+    return res.json({'delete': 'successfully'})
+}
+
+const updateBoard = async (req, res, next) => {
+    verify(req.headers.token)
+    const test = await Board.updateOne({_id: req.body.id}, {
+        $set: {
+            name: req.body.name
+        }
+    })
+    return res.json({'status': test})
 }
 
 const registerUser = async (req, res, next) => {
@@ -76,7 +97,8 @@ module.exports = {
     registerUser,
     loginUser,
     getInfo,
-    createTask,
-    getTasks,
-    deleteTask
+    createBoard,
+    getBoards,
+    deleteBoard,
+    updateBoard
 };

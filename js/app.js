@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const mongoose = require('mongoose');
 const cors = require("cors");
 const {usersRouter} = require("./userRoutes");
-const port = process.env.port || 8080
+const port =  8080
 const app = express();
 
 mongoose.connect('mongodb+srv://admin:admin@cluster0.yh5qab5.mongodb.net/?retryWrites=true&w=majority');

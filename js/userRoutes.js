@@ -1,19 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getInfo } = require('./userService.js');
-const {createTask, getTasks, deleteTask} = require("./userService");
+const {createBoard, getBoards, deleteBoard, updateBoard} = require("./userService");
 
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.post('/create', createTask)
+router.post('/create', createBoard)
 
+router.put('/update', updateBoard)
 
 router.get('/me', getInfo)
-router.get('/tasks', getTasks)
+router.get('/tasks', getBoards)
 
 
-router.delete('/delete', deleteTask)
+router.delete('/delete', deleteBoard)
+
 
 
 module.exports = {
