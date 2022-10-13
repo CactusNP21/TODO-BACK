@@ -43,7 +43,7 @@ const deleteBoard = async (req, res, next) => {
     return res.json({'delete': 'successfully'})
 }
 
-const updateBoard = async (req, res, next) => {
+const updateNameBoard = async (req, res, next) => {
     verify(req.headers.token)
     const test = await Board.updateOne({_id: req.body.id}, {
         $set: {
@@ -52,6 +52,18 @@ const updateBoard = async (req, res, next) => {
     })
     return res.json({'status': test})
 }
+
+const updateBoardTasks = async (req, res, next) => {
+  verify(req.headers.token);
+  const {tasks} = req.body
+  const test = await Board.updateOne({_id: req.body.id}, {
+      $set: {
+          tasks: tasks
+      }
+  });
+  return res.json({'status': test})
+}
+
 
 const registerUser = async (req, res, next) => {
     const {username, password} = req.body;
@@ -100,5 +112,6 @@ module.exports = {
     createBoard,
     getBoards,
     deleteBoard,
-    updateBoard
+    updateNameBoard,
+    updateBoardTasks,
 };
